@@ -1,7 +1,10 @@
 faiss-cpu
 langchain
+langchain_community
+langchain-openai
 loguru
 openai
+streamlit
 streamlit_chat
 tiktoken
 tqdm
