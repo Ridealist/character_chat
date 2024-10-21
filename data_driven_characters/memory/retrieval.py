@@ -1,10 +1,14 @@
-from typing import Any, List, Dict
+from typing import Any, List, Dict, ClassVar
 from langchain.memory import VectorStoreRetrieverMemory
 
 from langchain.schema import Document
 
 
 class ConversationVectorStoreRetrieverMemory(VectorStoreRetrieverMemory):
+    input_prefix: ClassVar[str]
+    output_prefix: ClassVar[str]
+    blacklist: ClassVar[List]
+
     input_prefix = "Human"
     output_prefix = "AI"
     blacklist = []  # keys to ignore

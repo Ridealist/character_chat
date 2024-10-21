@@ -1,8 +1,9 @@
-from pydantic import root_validator
+# from pydantic import root_validator
 from typing import Tuple, List, Dict
 
-from langchain import PromptTemplate, LLMChain
-from langchain.chat_models import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+from langchain.chains.llm import LLMChain
+from langchain_openai import ChatOpenAI
 from langchain.base_language import BaseLanguageModel
 from langchain.chains.base import Chain
 from langchain.prompts.chat import (
@@ -37,8 +38,9 @@ Your description should exaggerate the style, mannerisms, and personality of you
     description_prompt = ChatPromptTemplate.from_messages(
         [system_message, human_message]
     )
-    GPT4 = ChatOpenAI(model_name="gpt-4")
-    description_chain = LLMChain(llm=GPT4, prompt=description_prompt, verbose=True)
+    GPT4O = ChatOpenAI(model_name="gpt-4o")
+    # GPT4 = ChatOpenAI(model_name="gpt-4")
+    description_chain = LLMChain(llm=GPT4O, prompt=description_prompt, verbose=True)
     return description_chain
 
 
@@ -64,7 +66,7 @@ Your revision should be in {perspective}.
 """
     verbose: bool = False
 
-    @root_validator(pre=True)
+    # @root_validator(pre=True)
     def check_character_range(cls, values):
         character_range = values.get("character_range")
         if character_range[0] >= character_range[1]:

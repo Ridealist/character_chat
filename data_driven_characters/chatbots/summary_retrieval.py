@@ -1,16 +1,15 @@
 import faiss
 from tqdm import tqdm
 
-from langchain.chains import ConversationChain
-from langchain.chat_models import ChatOpenAI
-from langchain.docstore import InMemoryDocstore
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.chains.conversation.base import ConversationChain
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain.memory import (
     ConversationBufferMemory,
     CombinedMemory,
 )
-from langchain.prompts import PromptTemplate
-from langchain.vectorstores import FAISS
+from langchain_core.prompts import PromptTemplate
+from langchain_community.vectorstores import FAISS
 
 from data_driven_characters.memory import ConversationVectorStoreRetrieverMemory
 

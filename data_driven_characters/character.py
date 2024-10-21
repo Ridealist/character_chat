@@ -2,8 +2,9 @@ from dataclasses import dataclass, asdict
 import json
 import os
 
-from langchain.chat_models import ChatOpenAI
-from langchain import PromptTemplate, LLMChain
+from langchain_core.prompts import PromptTemplate
+from langchain.chains.llm import LLMChain
+from langchain_openai import ChatOpenAI
 
 from data_driven_characters.chains import FitCharLimit, define_description_chain
 
