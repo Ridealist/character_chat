@@ -16,6 +16,9 @@ from data_driven_characters.chatbots import (
 )
 from data_driven_characters.interfaces import reset_chat, clear_user_input, converse
 
+openai_api_key = st.secrets["openai_api_key"]
+st.write(f'API Load Successfully : {st.secrets["openai_api_key"][-5:]}')
+os.environ["OPENAI_API_KEY"] = openai_api_key
 
 @st.cache_resource()
 def create_chatbot(character_definition, corpus_summaries, chatbot_type):
@@ -64,12 +67,6 @@ def main():
     st.write(
         "Upload a corpus in the sidebar to generate a character chatbot that is grounded in the corpus content."
     )
-    openai_api_key = st.text_input(
-        label="Your OpenAI API KEY",
-        placeholder="Your OpenAI API KEY",
-        type="password",
-    )
-    os.environ["OPENAI_API_KEY"] = openai_api_key
 
     with st.sidebar:
         uploaded_file = st.file_uploader("Upload corpus")
