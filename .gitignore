@@ -3,5 +3,3 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.egg-info/
-
-.DS_Store
