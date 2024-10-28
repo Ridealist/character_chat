@@ -1,15 +1,15 @@
 import faiss
 from tqdm import tqdm
 
+from langchain.prompts import PromptTemplate
 from langchain.chains.conversation.base import ConversationChain
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain.memory import (
     ConversationBufferMemory,
     CombinedMemory,
 )
-from langchain_core.prompts import PromptTemplate
+from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_community.vectorstores import FAISS
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from data_driven_characters.memory import ConversationVectorStoreRetrieverMemory
 
@@ -30,7 +30,6 @@ class SummaryRetrievalChatBot:
         conv_memory = ConversationBufferMemory(
             memory_key=self.chat_history_key, input_key=self.input_key
         )
-
         context_memory = ConversationVectorStoreRetrieverMemory(
             retriever=FAISS(
                 OpenAIEmbeddings().embed_query,
@@ -74,9 +73,10 @@ Current conversation:
 Human: {{{self.input_key}}}
 {character_definition.name}:"""
         )
-        GPT3 = ChatOpenAI(model_name="gpt-3.5-turbo")
+        GPT4o = ChatOpenAI(model='gpt-4o')
+        # GPT3 = ChatOpenAI(model="gpt-3.5-turbo")
         chatbot = ConversationChain(
-            llm=GPT3, verbose=True, memory=memory, prompt=prompt
+            llm=GPT4o, verbose=True, memory=memory, prompt=prompt
         )
         return chatbot
 

@@ -1,16 +1,17 @@
 # from pydantic import root_validator
 from typing import Tuple, List, Dict
 
-from langchain_core.prompts import PromptTemplate
-from langchain.chains.llm import LLMChain
-from langchain_openai import ChatOpenAI
 from langchain.base_language import BaseLanguageModel
+from langchain.chains.llm import LLMChain
 from langchain.chains.base import Chain
+from langchain.prompts import PromptTemplate
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
+
+from langchain_openai import ChatOpenAI
 
 
 def define_description_chain():
@@ -38,7 +39,7 @@ Your description should exaggerate the style, mannerisms, and personality of you
     description_prompt = ChatPromptTemplate.from_messages(
         [system_message, human_message]
     )
-    GPT4O = ChatOpenAI(model_name="gpt-4o")
+    GPT4O = ChatOpenAI(model="gpt-4o")
     # GPT4 = ChatOpenAI(model_name="gpt-4")
     description_chain = LLMChain(llm=GPT4O, prompt=description_prompt, verbose=True)
     return description_chain

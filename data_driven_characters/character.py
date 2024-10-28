@@ -28,11 +28,11 @@ def generate_character_ai_description(name, corpus_summaries, char_limit):
     lower_limit = char_limit - 10 ** (order_of_magnitude(char_limit))
 
     description_chain = define_description_chain()
-    GPT4 = ChatOpenAI(model_name="gpt-4")
+    GPT4o = ChatOpenAI(model="gpt-4o")
     char_limit_chain = FitCharLimit(
         chain=description_chain,
         character_range=(lower_limit, char_limit),
-        llm=GPT4,
+        llm=GPT4o,
         verbose=VERBOSE,
     )
     description = char_limit_chain.run(

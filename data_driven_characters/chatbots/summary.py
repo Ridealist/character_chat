@@ -1,8 +1,8 @@
 from langchain.prompts import PromptTemplate
 from langchain.chains.conversation.base import ConversationChain
-from langchain_openai import ChatOpenAI
-
 from langchain.memory import ConversationBufferMemory
+
+from langchain_openai import ChatOpenAI
 
 
 class SummaryChatBot:
@@ -11,7 +11,8 @@ class SummaryChatBot:
         self.chain = self.create_chain(character_definition)
 
     def create_chain(self, character_definition):
-        GPT3 = ChatOpenAI(model_name="gpt-3.5-turbo")
+        # GPT3 = ChatOpenAI(model_name="gpt-3.5-turbo")
+        GPT4o = ChatOpenAI(model='gpt-4o')
 
         memory = ConversationBufferMemory(memory_key="chat_history", input_key="input")
         prompt = PromptTemplate.from_template(
@@ -35,7 +36,7 @@ Human: {{input}}
 {character_definition.name}:"""
         )
         chatbot = ConversationChain(
-            llm=GPT3, verbose=True, memory=memory, prompt=prompt
+            llm=GPT4o, verbose=True, memory=memory, prompt=prompt
         )
         return chatbot
 

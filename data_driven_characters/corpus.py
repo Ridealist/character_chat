@@ -1,11 +1,11 @@
 import json
 import os
 
-from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
 from langchain.chains.llm import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
 
 from data_driven_characters.constants import VERBOSE
 
@@ -61,7 +61,7 @@ def get_corpus_summaries(docs, summary_type, cache_dir, force_refresh=False):
 
 def generate_characters(corpus_summaries, num_characters):
     """Get a list of characters from a list of summaries."""
-    GPT4 = ChatOpenAI(model_name="gpt-4")
+    GPT4o = ChatOpenAI(model="gpt-4o")
     characters_prompt_template = """Consider the following corpus.
     ---
     {corpus_summaries}
@@ -69,7 +69,7 @@ def generate_characters(corpus_summaries, num_characters):
     Give a line-separated list of all the characters, ordered by importance, without punctuation.
     """
     characters = LLMChain(
-        llm=GPT4, prompt=PromptTemplate.from_template(characters_prompt_template)
+        llm=GPT4o, prompt=PromptTemplate.from_template(characters_prompt_template)
     ).run(corpus_summaries="\n\n".join(corpus_summaries))
     # remove (, ), and " for each element of list
     return characters.split("\n")[:num_characters]
