@@ -8,6 +8,7 @@ streamlit
 streamlit_chat
 tiktoken
 tqdm
+torch
 FlagEmbedding
 elasticsearch
 peft
