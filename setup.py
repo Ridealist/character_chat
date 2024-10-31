@@ -13,5 +13,8 @@ setup(
         'streamlit_chat',
         'tiktoken',
         'tqdm',
+        'FlagEmbedding',
+        'elasticsearch',
+        'peft',
     ],
 )
