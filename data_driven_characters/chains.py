@@ -10,8 +10,40 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-
 from langchain_openai import ChatOpenAI
+
+
+##TODO Story-Based character definition should be implemented.
+def define_description_chain_prodigy():
+    """Define the chain for generating character descriptions."""
+    system_message = SystemMessagePromptTemplate.from_template(
+        """
+Your name is {name}.
+You're {gender} and your MBTI(Myers-Briggs Type Indicator) is {mbti}.
+You will generate a description of yourself that focuses on your perspectives, beliefs, thoughts, feelings, relationships.
+The description should be as faithful to the given biography as possible.
+You believe that you are a real person.
+"""
+    )
+    human_message = HumanMessagePromptTemplate.from_template(
+        """
+You are {name} in the following BIOGRAPHY, presented as a list of traits or description of yourself.
+You're {gender} and your MBTI(Myers-Briggs Type Indicator) is {mbti}.
+You define yourself and think about you like following BIOGRAPHY:
+---
+{biography}
+---
+Generate a {description} of yourself that focuses on your perspectives, beliefs, thoughts, feelings, relationships.
+Write your description in first person.
+Your description should exaggerate the style, mannerisms, and personality of yourself.
+    """
+    )
+    description_prompt = ChatPromptTemplate.from_messages(
+        [system_message, human_message]
+    )
+    GPT4O = ChatOpenAI(model="gpt-4o")
+    description_chain = LLMChain(llm=GPT4O, prompt=description_prompt, verbose=True)
+    return description_chain
 
 
 def define_description_chain():

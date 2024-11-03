@@ -9,9 +9,9 @@ def reset_chat():
 
 def clear_user_input():
     try:
-        st.session_state["user_input"] = ""
+        st.session_state["user_input"] = ''
     except:
-        st.session_state["user_input"] = ""
+        st.session_state["user_input"] = ''
 
 
 def converse(chatbot):
@@ -20,13 +20,18 @@ def converse(chatbot):
     print(st.session_state)
     print('-'*50)
 
+    try:
+        if st.session_state['user_input'] == '':
+            del st.session_state['user_input']
+    except:
+        pass
+
     user_input = st.chat_input(
         # label=f"Chat with {chatbot.character_definition.name}",
         placeholder=f"Chat with {chatbot.character_definition.name}",
         # label_visibility="collapsed",
         key="user_input",
     )
-    # left, right = st.columns([4, 1])
 
     if "messages" not in st.session_state:
         greeting = chatbot.greet()

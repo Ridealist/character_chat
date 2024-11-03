@@ -1,1 +1,1 @@
-from .retrieval import ConversationVectorStoreRetrieverMemory
+from .retrieval import ConversationVectorStoreRetrieverMemory, ElasticSearchRetriever

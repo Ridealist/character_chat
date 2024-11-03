@@ -1,2 +1,3 @@
 DATA_ROOT = "data"
 VERBOSE = True
+NUM_CONTEXT_MEMORY = 5
