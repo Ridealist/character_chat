@@ -3,6 +3,7 @@ faiss-cpu
 langchain
 langchain_community
 langchain-openai
+langchain-elasticsearch
 loguru
 openai
 streamlit
