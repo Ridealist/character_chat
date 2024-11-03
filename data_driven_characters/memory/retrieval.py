@@ -64,7 +64,8 @@ class ElasticSearchRetriever(BaseRetriever, BaseModel):
         ) as client:
             batch_embeddings = BGEM3FlagModel(
                 model_name_or_path="BAAI/bge-m3",
-                device="mps"
+                #TODO 배포시 device 세팅 변경하기!
+                # device="mps"
             ).encode(
                 query, return_dense=True, return_sparse=False
             )
