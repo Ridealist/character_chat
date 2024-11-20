@@ -7,5 +7,7 @@ __pycache__/
 .DS_Store
 secrets.toml
 
+testing/
 retrieval.ipynb
 memory_chain.ipynb
+llama_guard.ipynb
