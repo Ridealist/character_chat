@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import pandas as pd
 import torch
+import json
 
 from typing import Any, List, Dict, ClassVar
 from pydantic import BaseModel
@@ -20,6 +21,17 @@ os.environ["ELASTIC_API_KEY"] = elasticsearch_api_key
 os.environ["ELASTIC_HOST_URL"] = elasticsearch_host_url
 
 torch.set_num_threads(1)
+
+EMBEDDING_MODEL = BGEM3FlagModel(
+                model_name_or_path="BAAI/bge-m3",
+                #TODO 배포시 device 세팅 변경하기!
+                device="mps",
+                use_fp16=True,
+            )
+
+with open('/Users/ridealist/Desktop/data-driven-characters/eval_data/turingcat_test_in_domain.json', 'r') as json_file:
+    in_domain_data = json.load(json_file)
+json_file.close() 
 
 class ConversationVectorStoreRetrieverMemory(VectorStoreRetrieverMemory):
     input_prefix: ClassVar[str]
@@ -55,18 +67,14 @@ class ElasticSearchRetriever(BaseRetriever, BaseModel):
     character_id: str
     characters_info_df: pd.DataFrame
     k: int
-
+    black_list: str = "none"
 
     def _query(self, query):
         with Elasticsearch(
             hosts=elasticsearch_host_url,
             api_key=elasticsearch_api_key, 
         ) as client:
-            batch_embeddings = BGEM3FlagModel(
-                model_name_or_path="BAAI/bge-m3",
-                #TODO 배포시 device 세팅 변경하기!
-                # device="mps"
-            ).encode(
+            batch_embeddings = EMBEDDING_MODEL.encode(
                 query, return_dense=True, return_sparse=False
             )
             dense_embeddings = batch_embeddings["dense_vecs"].tolist()
@@ -107,28 +115,28 @@ class ElasticSearchRetriever(BaseRetriever, BaseModel):
                     },
                     request_timeout=60
                 )
-
         #TODO Add more dialogues to response - by score threshold -> retrieve all related dialogues
-        return response['hits']['hits'][:self.k]
-
+        return response['hits']['hits']
 
     def _get_relevant_documents(self, query: str) -> List[Document]:
         documents = []
         dialogues = self._query(query)
-        # print("-"*25 + 'DIALOGUES' + "-"*25)
-        # print(dialogues)
-        # print("-"*50)
         for dialogue_dict in dialogues:
             dialogue_texts = []
+            # print(f'BLACKLIST: {self.black_list}')
+            # print(f'DIALOGUE_DICT: {dialogue_dict}')
+            if self.black_list is not None and self.black_list in dialogue_dict['fields']['dialogue_id']:
+                continue
             for idx, utterance in enumerate(dialogue_dict['fields']['dialogues']):
                 utter_character_id = dialogue_dict['fields']['speakers'][idx]
                 try:
                     character_name = self.characters_info_df[self.characters_info_df['character_id'] == utter_character_id]['character_name'].item()
                 except:
-                    character_name = 'Unknown'
+                    character_name = '(Unknown)'
                 character_name_firstCap = character_name[0] + character_name[1:].lower()
                 dialogue_texts.append(f'{character_name_firstCap}: {utterance}')
             page_content = "\n".join(dialogue_texts)
-            documents.append(Document(page_content=page_content))
+            documents.append(Document(page_content=page_content, metadata={"conversation_id": dialogue_dict['fields']['dialogue_id'][0]}))
+            if len(documents) == self.k:
+                break
         return documents
-

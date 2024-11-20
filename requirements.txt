@@ -4,6 +4,7 @@ langchain
 langchain_community
 langchain-openai
 langchain-elasticsearch
+langchain_groq
 loguru
 openai
 streamlit
