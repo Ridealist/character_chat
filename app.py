@@ -11,9 +11,9 @@ from data_driven_characters.corpus import (
     generate_docs,
 )
 from data_driven_characters.chatbots import (
-    SummaryChatBot,
-    RetrievalChatBot,
-    SummaryRetrievalChatBot,
+    # SummaryChatBot,
+    # RetrievalChatBot,
+    # SummaryRetrievalChatBot,
     SummaryRetrievalChatBotProdigy
 )
 from data_driven_characters.interfaces import reset_chat, clear_user_input, converse
@@ -95,10 +95,10 @@ def load_prodigy():
 
 
 def main():
-    st.title("Data-Driven Characters")
-    st.write(
-        "Upload a corpus in the sidebar to generate a character chatbot that is grounded in the corpus content."
-    )
+    st.title("Persona-Consistent Character Chat")
+    # st.write(
+    #     "Upload a corpus in the sidebar to generate a character chatbot that is grounded in the corpus content."
+    # )
 
     with st.sidebar:
         # uploaded_file = st.file_uploader("Upload corpus")
@@ -172,19 +172,20 @@ def main():
                         biography=result['biography'].item(),
                     )
                     print(json.dumps(character_definition, indent=4))
-                    chatbot_type = st.selectbox(
-                        "Select a memory type",
-                        options=["summary with retrieval prodigy"],
-                        # options=["summary", "retrieval", "summary with retrieval"],
-                        index=0,
-                    )
-                    if (
-                        "chatbot_type" in st.session_state
-                        and st.session_state["chatbot_type"] != chatbot_type
-                    ):
-                        clear_user_input()
-                        reset_chat()
+                    # chatbot_type = st.selectbox(
+                    #     "Select a memory type",
+                    #     options=["summary with retrieval prodigy"],
+                    #     # options=["summary", "retrieval", "summary with retrieval"],
+                    #     index=0,
+                    # )
+                    # if (
+                    #     "chatbot_type" in st.session_state
+                    #     and st.session_state["chatbot_type"] != chatbot_type
+                    # ):
+                    #     clear_user_input()
+                    #     reset_chat()
 
+                    chatbot_type = "summary with retrieval prodigy"
                     st.session_state["chatbot_type"] = chatbot_type
 
                     # st.markdown(
