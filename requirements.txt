@@ -1,6 +1,7 @@
 torch
 faiss-cpu
 langchain
+langchain-experimental
 langchain_community
 langchain-openai
 langchain-elasticsearch

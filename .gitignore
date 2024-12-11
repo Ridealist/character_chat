@@ -11,3 +11,7 @@ testing/
 retrieval.ipynb
 memory_chain.ipynb
 llama_guard.ipynb
+
+eval_data/
+eval_base.ipynb
+eval_ours.ipynb
