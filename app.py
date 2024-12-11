@@ -12,8 +12,8 @@ from data_driven_characters.corpus import (
 )
 from data_driven_characters.chatbots import (
     # SummaryChatBot,
-    # RetrievalChatBot,
-    # SummaryRetrievalChatBot,
+    BaseChatBotProdigy,
+    WeekBaseChatBotProdigy,
     SummaryRetrievalChatBotProdigy
 )
 from data_driven_characters.interfaces import reset_chat, clear_user_input, converse
@@ -21,6 +21,12 @@ from data_driven_characters.interfaces import reset_chat, clear_user_input, conv
 openai_api_key = st.secrets["openai_api_key"]
 st.write(f'API Load Successfully : {st.secrets["openai_api_key"][-5:]}')
 os.environ["OPENAI_API_KEY"] = openai_api_key
+
+os.environ["LANGCHAIN_TRACING_V2"] = st.secrets["langchain_tracing_v2"]
+os.environ["LANGCHAIN_API_KEY"] = st.secrets["langchain_api_key"]
+os.environ["LANGCHAIN_ENDPOINT"] = st.secrets["langchain_endpoint"]
+os.environ["LANGCHAIN_PROJECT"] = st.secrets["langchain_project"]
+
 
 PRODIGY_DATAFRAME = None
 
@@ -38,7 +44,15 @@ def create_chatbot(character_definition, characters_info_df, chatbot_type): #cor
     #         character_definition=character_definition,
     #         documents=corpus_summaries,
     #     )
-    if chatbot_type == "summary with retrieval prodigy":
+    if chatbot_type == "base prodigy":
+        chatbot = BaseChatBotProdigy(
+            character_definition=character_definition,
+            characters_info_df=characters_info_df
+        )
+        chatbot.character_definition = character_definition
+        chatbot.characters_info_df = characters_info_df
+    
+    elif chatbot_type == "summary with retrieval prodigy":
         chatbot = SummaryRetrievalChatBotProdigy(
             character_definition=character_definition,
             characters_info_df=characters_info_df
@@ -172,12 +186,13 @@ def main():
                         biography=result['biography'].item(),
                     )
                     print(json.dumps(character_definition, indent=4))
-                    # chatbot_type = st.selectbox(
-                    #     "Select a memory type",
-                    #     options=["summary with retrieval prodigy"],
-                    #     # options=["summary", "retrieval", "summary with retrieval"],
-                    #     index=0,
-                    # )
+                    
+                    chatbot_type = st.selectbox(
+                        "Select a memory type",
+                        # options=["summary with retrieval prodigy"],
+                        options=["summary with retrieval prodigy", "base prodigy"],
+                        index=0,
+                    )
                     # if (
                     #     "chatbot_type" in st.session_state
                     #     and st.session_state["chatbot_type"] != chatbot_type
@@ -185,7 +200,7 @@ def main():
                     #     clear_user_input()
                     #     reset_chat()
 
-                    chatbot_type = "summary with retrieval prodigy"
+                    # chatbot_type = "summary with retrieval prodigy"
                     st.session_state["chatbot_type"] = chatbot_type
 
                     # st.markdown(
