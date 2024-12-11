@@ -1,3 +1,5 @@
+import os
+import streamlit as st
 from typing import List
 from pydantic import BaseModel, Field
 
@@ -22,13 +24,10 @@ from data_driven_characters.chatbots.llama_guard import (
     SafetyAssessment
 )
 
-
-import os
-
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = "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"
-os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
-os.environ["LANGCHAIN_PROJECT"] = "default"
+os.environ["LANGCHAIN_TRACING_V2"] = st.secrets["langchain_tracing_v2"]
+os.environ["LANGCHAIN_API_KEY"] = st.secrets["langchain_api_key"]
+os.environ["LANGCHAIN_ENDPOINT"] = st.secrets["langchain_endpoint"]
+os.environ["LANGCHAIN_PROJECT"] = st.secrets["langchain_project"]
 
 
 class InMemoryHistory(BaseChatMessageHistory, BaseModel):
@@ -100,22 +99,22 @@ class SummaryRetrievalChatBotProdigy:
         qa_prompt = PromptTemplate.from_template(
             f"""Your name is {character_definition.name}.
 Here is how you describe yourself:
----
+
 {character_definition.long_description}
 ---
-
 You will have a conversation with a Human, and you will engage in a dialogue with them.
 You will exaggerate your personality, interests, desires, emotions, and other traits.
 You will stay in character as {character_definition.name} throughout the conversation, even if the Human asks you questions that you don't know the answer to.
 You will not break character as {character_definition.name}.
 ---
 Current conversation:
----
+
 {character_definition.name}: {character_definition.greeting}
 {{{self.chat_history_key}}}
 ---
 Use the following pieces of retrieved context to answer the question which describe some conversations in your life.
 If you don't know the answer, say that you don't know. Remember that this is a conversation with others, not a monologue to yourself, so keep it to a reasonable length. Use TWO SENTECES MAXIMUM.
+
 "{{context}}"
 ---
 Human: {{{self.input_key}}}
